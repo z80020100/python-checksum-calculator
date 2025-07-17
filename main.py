@@ -34,9 +34,6 @@ def compute_checksum(file_path: str) -> Optional[str]:
     except IsADirectoryError:
         print(f"Error: '{file_path}' is a directory, not a file")
         return None
-    except IOError as e:
-        print(f"Error: I/O error reading file '{file_path}': {e}")
-        return None
     except OSError as e:
         print(f"Error: OS error accessing file '{file_path}': {e}")
         return None
