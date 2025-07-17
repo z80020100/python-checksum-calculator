@@ -22,8 +22,23 @@ def compute_checksum(file_path: str) -> Optional[str]:
         digest = md5_hash.digest()
         checksum = base64.b64encode(digest).decode('utf-8')
         return checksum
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found")
+        return None
+    except PermissionError:
+        print(f"Error: Permission denied accessing file '{file_path}'")
+        return None
+    except IsADirectoryError:
+        print(f"Error: '{file_path}' is a directory, not a file")
+        return None
+    except IOError as e:
+        print(f"Error: I/O error reading file '{file_path}': {e}")
+        return None
+    except OSError as e:
+        print(f"Error: OS error accessing file '{file_path}': {e}")
+        return None
     except Exception as e:
-        print(f"Failed to compute checksum for file: {file_path}, error: {e}")
+        print(f"Error: Unexpected error processing file '{file_path}': {e}")
         return None
 
 
