@@ -53,11 +53,6 @@ def main():
 
     file_path = sys.argv[1]
 
-    # Check if file exists
-    if not os.path.exists(file_path):
-        print(f"Error: File '{file_path}' not found")
-        sys.exit(1)
-
     checksum = compute_checksum(file_path)
     if checksum:
         print(f"Checksum: {checksum}")
