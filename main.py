@@ -6,6 +6,9 @@ import os
 import sys
 from typing import Optional
 
+# Constants
+CHUNK_SIZE = 8192
+
 
 def compute_checksum(file_path: str) -> Optional[str]:
     """
@@ -14,8 +17,8 @@ def compute_checksum(file_path: str) -> Optional[str]:
     try:
         md5_hash = hashlib.md5()
         with open(file_path, 'rb') as f:
-            # Read in chunks of 8192 bytes
-            for chunk in iter(lambda: f.read(8192), b''):
+            # Read in chunks for efficient memory usage
+            for chunk in iter(lambda: f.read(CHUNK_SIZE), b''):
                 md5_hash.update(chunk)
 
         # Get the digest and encode to Base64 without line wrapping
