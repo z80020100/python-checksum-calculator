@@ -30,8 +30,16 @@ def get_remote_file_size(url: str) -> Optional[int]:
             if content_length:
                 return int(content_length)
             return None
-    except (urllib.error.URLError, urllib.error.HTTPError, ValueError) as e:
-        print(f"Error: Cannot get file size from '{url}': {e}")
+    except urllib.error.HTTPError as e:
+        print(
+            f"Error: HTTP error getting file size from '{url}': {e.code} {e.reason}")
+        return None
+    except urllib.error.URLError as e:
+        print(
+            f"Error: Network error getting file size from '{url}': {e.reason}")
+        return None
+    except ValueError as e:
+        print(f"Error: Invalid content length from '{url}': {e}")
         return None
     except Exception as e:
         print(f"Error: Unexpected error checking file size: {e}")
@@ -48,8 +56,12 @@ def compute_checksum_from_memory(url: str) -> Optional[str]:
         digest = md5_hash.digest()
         checksum = base64.b64encode(digest).decode('utf-8')
         return checksum
-    except (urllib.error.URLError, urllib.error.HTTPError) as e:
-        print(f"Error: Cannot download file from '{url}': {e}")
+    except urllib.error.HTTPError as e:
+        print(
+            f"Error: HTTP error downloading from '{url}': {e.code} {e.reason}")
+        return None
+    except urllib.error.URLError as e:
+        print(f"Error: Network error downloading from '{url}': {e.reason}")
         return None
     except MemoryError:
         print(f"Error: File too large to process in memory")
@@ -75,8 +87,12 @@ def compute_checksum_from_download(url: str) -> Optional[str]:
 
         checksum = compute_checksum(temp_path)
         return checksum
-    except (urllib.error.URLError, urllib.error.HTTPError) as e:
-        print(f"Error: Cannot download file from '{url}': {e}")
+    except urllib.error.HTTPError as e:
+        print(
+            f"Error: HTTP error downloading from '{url}': {e.code} {e.reason}")
+        return None
+    except urllib.error.URLError as e:
+        print(f"Error: Network error downloading from '{url}': {e.reason}")
         return None
     except OSError as e:
         print(f"Error: Cannot create temporary file: {e}")
