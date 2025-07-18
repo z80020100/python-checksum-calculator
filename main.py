@@ -137,9 +137,15 @@ def main():
         file_size = get_remote_file_size(path_or_url)
 
         if file_size is None:
-            # Cannot determine size, try small file approach first
-            print("Warning: Cannot determine file size, attempting direct download...")
+            # Cannot determine size, try in-memory first with fallback to temp file
+            print(
+                "Warning: Cannot determine file size, attempting in-memory processing with fallback...")
             checksum = compute_checksum_from_memory(path_or_url)
+            if checksum is None:
+                # If in-memory failed (likely due to size), fallback to temp file approach
+                print(
+                    "In-memory processing failed, falling back to temporary file download...")
+                checksum = compute_checksum_from_download(path_or_url)
         elif file_size < MAX_MEMORY_SIZE:
             # Small file - process in memory
             print(f"File size: {file_size} bytes (processing in memory)")
